@@ -1,0 +1,25 @@
+---
+#
+# Installing Kibana
+#
+- name: Install Kibana rpm from a local file
+  yum:
+    name: /home/user/tmp/kibana-5.5.0-x86_64.rpm
+#  become: true
+# Update kibana config file to only accept local connections
+#- name: Updating the config file to restrict outside access
+# lineinfile:
+#   destfile: /etc/kibana/kibana.yml
+#   regexp: 'server.host:'
+#   line: 'server.host: localhost'
+# Enable Kibana service
+- name: Enabling Kibana service
+  systemd:
+    name: kibana
+    enabled: yes
+    daemon_reload: yes
+# Start Kibana service
+- name: Starting Kibana service
+  systemd:
+    name: kibana
+    state: started

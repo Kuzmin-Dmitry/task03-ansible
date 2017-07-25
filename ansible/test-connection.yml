@@ -1,0 +1,15 @@
+---
+- hosts: node01
+  vars_files:
+    - group_vars/vars.yml
+  remote_user: root
+  become: true
+  become_user: root
+  become_method: sudo
+  roles:
+  #  - { role: preparation }
+  #  - { role: java }
+  #  - { role: elasticsearch }
+  #  - { role: kibana }
+    - { role: nginx }
+    - { role: logstash }
