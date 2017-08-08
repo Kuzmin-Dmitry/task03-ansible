@@ -1,11 +1,11 @@
 ---
 - name: Create Directory structure
-  command: mkdir -p /home/user/tmp
+  command: mkdir -p {{ remote_repo_path }}
 
 - name: Copy required packages
   copy:
-    src: /home/user/task03/ansible/files/
-    dest: /home/user/tmp
+    src: "{{ local_repo_path }}/"
+    dest: "{{ remote_repo_path }}"
     force: no
 #    directory_mode: yes
 #    remote_src: yes

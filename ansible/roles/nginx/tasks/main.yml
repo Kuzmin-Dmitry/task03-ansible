@@ -5,7 +5,7 @@
 # Install Nginx
 - name: Install Nginx rpm from a local file
   yum:
-    name: /home/user/tmp/nginx-1.13.3-1.el7.ngx.x86_64.rpm
+    name: "{{ remote_repo_path }}/{{ nginx_package }}"
 # Create /etc/nginx/conf.d/ directory
 - name: Create nginx directory structure
   file: path=/etc/nginx/conf.d/
@@ -36,14 +36,6 @@
     name: nginx
     state: started
     daemon_reload: yes
-# Install Pexpect to handle promts of the terminal
-#- name: Installing Python Pexpect
-#  yum:
-#    name: python-pexpect
-#    update_cache: yes
-#- name: Installing Python Pexpect
-#  easy_install:
-#    name: pexpect
 # Writes the create user script in the temp directory
 - name: Writes the create user script in the temp directory
   template:

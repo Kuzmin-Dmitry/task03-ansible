@@ -5,7 +5,7 @@
 # Install Nginx
 - name: Install Logstash rpm from a local file
   yum:
-    name: /home/user/tmp/logstash-5.5.0.rpm
+    name: "{{ remote_repo_path }}/{{ logstash_package }}"
 # Creating certs directories for SSL
 - name: Creates SSL directories
   file:
@@ -16,7 +16,7 @@
   file:
     path: /etc/pki/tls/private
     state: directory
-# Update SSL to restrict outside access
+# Update SSL to allow outside access
 - name: Updating the config file to restrict outside access
   lineinfile:
     destfile: /etc/ssl/openssl.cnf
@@ -50,6 +50,12 @@
     owner=root
     group=root
     mode=0644
+# Update kibana config file to allow outside access
+- name: Updating the config file to allow outside access
+  lineinfile:
+    destfile: /etc/logstash/logstash.yml
+    regexp: 'http.host:'
+    line: "http.host: \"{{ elk_ip }}\""
  # Enable Logstash service
 - name: Enable Logstash service
   systemd:

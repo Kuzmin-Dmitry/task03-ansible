@@ -1,19 +1,6 @@
 ---
 # Install Java
-#- name: Create Directory structure
-#  command: mkdir -p {{download_folder}}
-#  command: mkdir -p {{java_name}}
-#
-#- name: Download Java
-#  get_url: url={{ jdk_tarball_url }}  dest={{ java_archive }} headers="Cookie:' gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie'" validate_certs=no owner=root group=root mode=744
-#
-#- name: Unpack Java archive
-#  action: shell tar -xzvf {{java_archive}} -C {{download_folder}}
-#
-#- name: Fix ownership
-#  file: state=directory path={{java_name}} owner=user group=user recurse=yes
-
 - name: Install Java rpm from a local file
   yum:
-    name: /home/user/tmp/jdk-8u141-linux-x64.rpm
+    name: "{{ remote_repo_path }}/{{ java_package }}"
   become: true

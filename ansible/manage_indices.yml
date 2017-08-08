@@ -11,12 +11,10 @@
       file:
         path: /opt/scripts
         state: directory
-    - name: Transfer the script
+    - name: Transfer the script (index_management)
       copy:
-        src: "{{ playbook_dir }}/files/check.sh.j2"
-        dest: /opt/scripts/check.sh
+        src: "{{ playbook_dir }}/files/index_management.sh.js"
+        dest: /opt/scripts/index_management.sh
         mode: 0777
-    - name: Check status of ELK and Nginx
-      command: sh /opt/scripts/check.sh -v
-#      register: elk
-#    - debug: var=elk.stdout_lines
+    - name: Manage ELK indices
+      command: sh /opt/scripts/index_management.sh -v

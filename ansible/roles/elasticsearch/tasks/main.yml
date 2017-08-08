@@ -4,14 +4,20 @@
 #
 - name: Install Elasticsearch rpm from a local file
   yum:
-    name: /home/user/tmp/elasticsearch-5.5.0.rpm
+    name: "{{ remote_repo_path }}/{{ elasticsearch_package }}"
   become: true
-# Update Elasticsearch config file to only allow localhost connections
-#- name: Updating the config file to restrict outside access
-# lineinfile:
-#   destfile: /etc/elasticsearch/elasticsearch.yml
-#   regexp: 'network.host:'
-#   line: 'network.host: localhost'
+# Update Elasticsearch config file to allow outside access
+- name: Updating the config file to allow outside access
+  lineinfile:
+    destfile: /etc/elasticsearch/elasticsearch.yml
+    regexp: 'network.host:'
+    line: "network.host: {{ elk_ip }}"
+# Enable Elasticsearch service
+- name: Enabling Elasticsearch service
+  systemd:
+    name: elasticsearch
+    enabled: yes
+    daemon_reload: yes
 # Restart Elasticsearch
 - name: Restarting Elasticsearch
   service:
