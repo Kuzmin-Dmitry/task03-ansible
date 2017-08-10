@@ -2,21 +2,64 @@
 #
 # Installing Filebeat
 #
+# Create Directory structure
+- name: Create Directory structure (Filebeat)
+  command: mkdir -p {{ remote_repo_path }}
+# Copy Filebeat package to remote client
+- name: Copy Filebeat package
+  copy:
+    src: "{{ local_repo_path }}/{{ filebeat_package }}"
+    dest: "{{ remote_repo_path }}"
+    force: no
+# Install Filebeat rpm from a local file
 - name: Install Filebeat rpm from a local file
   yum:
     name: "{{ remote_repo_path }}/{{ filebeat_package }}"
-
+# Copy Logstash certificate from ELK server
+# - name: Copy Logstash certificate from ELK server
+#   synchronize: src=/etc/pki/tls/certs/logstash-forwarder.crt dest=/etc/filebeat/
+#   delegate_to: "{{ elk_ip }}"
+# Copy Logstash certificate from ELK server to Ansible repo directory
+- name: Copy Logstash certificate from ELK server
+  fetch:
+    src: /etc/pki/tls/certs/logstash-forwarder.crt
+    dest: "{{ local_repo_path }}"
+    flat: no
+# Copy Logstash certificate to Filebeat client from Ansible repo directory
+- name: Copy Logstash certificate to Filebeat client
+  copy:
+    src: "{{ local_repo_path }}/ansible_server/etc/pki/tls/certs/logstash-forwarder.crt"
+    dest: /etc/filebeat/logstash-forwarder.crt
+# Remove Logstash certificate
+- name: Remove Logstash certificate
+  command: "rm {{ local_repo_path }}/ansible_server -Rf"
 # Update filebeat config file to correct work Filebeat
-- name: Updating the config file to correct work Filebeat
+- name: Comment Elasticsearch IP
   lineinfile:
     destfile: /etc/filebeat/filebeat.yml
-    regexp: 'hosts:'
-    line: "hosts: [\"{{ elk_ip }}:9200\"]"
-
-
-
-
-#hosts: [\"{{ elk_name }}:9200\"]
+    regexp: 'hosts: \[\"localhost:9200\"\]'
+    line: '#  hosts: ["localhost:9200"]'
+# Check Logstash IP entry in Filebeat config
+- name: Check Logstash IP entry in Filebeat config
+  shell: grep "{{ elk_ip }}" /etc/filebeat/filebeat.yml | wc -l
+  ignore_errors: true
+  register: logstash_host_exists
+# Add Logstash IP in Filebeat config
+- name: Add Logstash IP in Filebeat config
+  blockinfile:
+    path: /etc/filebeat/filebeat.yml
+    insertafter: '# The Logstash hosts'
+    block: |2
+        hosts: ["{{ elk_ip }}:5044"]
+        ssl:
+          certificate_authorities: ["/etc/filebeat/logstash-forwarder.crt"]
+  when: logstash_host_exists.stdout|int == 0
+# Update filebeat config file to correct work Filebeat
+- name: Uncomment output.logstash module
+  lineinfile:
+    destfile: /etc/filebeat/filebeat.yml
+    regexp: '#output.logstash:'
+    line: 'output.logstash:'
 # Enable Filebeat service
 - name: Enabling Filebeat service
   systemd:
