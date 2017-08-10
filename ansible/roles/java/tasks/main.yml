@@ -1,0 +1,6 @@
+---
+# Install Java
+- name: Install Java rpm from a local file
+  yum:
+    name: "{{ remote_repo_path }}/{{ java_package }}"
+  become: true

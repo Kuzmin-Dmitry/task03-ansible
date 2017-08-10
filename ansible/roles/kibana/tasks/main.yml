@@ -1,0 +1,30 @@
+---
+#
+# Installing Kibana
+#
+- name: Install Kibana rpm from a local file
+  yum:
+    name: "{{ remote_repo_path }}/{{ kibana_package }}"
+# Update kibana config file to allow outside access
+- name: Updating the config file to allow outside access
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'server.host:'
+    line: "server.host: \"{{ elk_ip }}\""
+# Update kibana config file to correct work Elasticsearch
+- name: Updating the config file to correct work Elasticsearch
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'elasticsearch.url:'
+    line: "elasticsearch.url: \"http://{{ elk_ip }}:9200\""
+# Enable Kibana service
+- name: Enabling Kibana service
+  systemd:
+    name: kibana
+    enabled: yes
+    daemon_reload: yes
+# Start Kibana service
+- name: Starting Kibana service
+  systemd:
+    name: kibana
+    state: started

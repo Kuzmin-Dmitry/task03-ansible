@@ -1,0 +1,25 @@
+---
+- hosts: "{{ elk_name }}"
+  vars_files:
+    - group_vars/deploy.yml
+  remote_user: root
+  become: true
+  become_user: root
+  become_method: sudo
+  roles:
+    - { role: preparation }
+    - { role: java }
+    - { role: elasticsearch }
+    - { role: kibana }
+    - { role: nginx }
+    - { role: logstash }
+- hosts: "{{ filebeat_name }}"
+  vars_files:
+    - group_vars/deploy.yml
+  remote_user: root
+  become: true
+  become_user: root
+  become_method: sudo
+  roles:
+    - { role: filebeat }
+dfgdfg

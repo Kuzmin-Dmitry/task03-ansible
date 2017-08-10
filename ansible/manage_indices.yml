@@ -1,0 +1,20 @@
+---
+- hosts: node04
+#  vars_files:
+#    - group_vars/vars.yml
+  remote_user: root
+  become: true
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: Create folder for scripts
+      file:
+        path: /opt/scripts
+        state: directory
+    - name: Transfer the script (index_management)
+      copy:
+        src: "{{ playbook_dir }}/files/index_management.sh.js"
+        dest: /opt/scripts/index_management.sh
+        mode: 0777
+    - name: Manage ELK indices
+      command: sh /opt/scripts/index_management.sh -v

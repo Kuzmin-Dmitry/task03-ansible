@@ -1,0 +1,3 @@
+if ! grep "admin" /etc/nginx/htpasswd.users; then
+echo "{{kibana_user}}:$apr1$bG.AUhKy$89DVG7kZ9laU/yHDWmYck0" | sudo tee -a /etc/nginx/htpasswd.users
+fi

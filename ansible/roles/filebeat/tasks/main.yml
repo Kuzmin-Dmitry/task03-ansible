@@ -1,0 +1,30 @@
+---
+#
+# Installing Filebeat
+#
+- name: Install Filebeat rpm from a local file
+  yum:
+    name: "{{ remote_repo_path }}/{{ filebeat_package }}"
+
+# Update filebeat config file to correct work Filebeat
+- name: Updating the config file to correct work Filebeat
+  lineinfile:
+    destfile: /etc/filebeat/filebeat.yml
+    regexp: 'hosts:'
+    line: "hosts: [\"{{ elk_ip }}:9200\"]"
+
+
+
+
+#hosts: [\"{{ elk_name }}:9200\"]
+# Enable Filebeat service
+- name: Enabling Filebeat service
+  systemd:
+    name: filebeat
+    enabled: yes
+    daemon_reload: yes
+# Start Filebeat service
+- name: Starting Filebeat service
+  systemd:
+    name: filebeat
+    state: started

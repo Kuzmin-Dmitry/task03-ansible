@@ -1,0 +1,11 @@
+---
+- name: Create Directory structure
+  command: mkdir -p {{ remote_repo_path }}
+
+- name: Copy required packages
+  copy:
+    src: "{{ local_repo_path }}/"
+    dest: "{{ remote_repo_path }}"
+    force: no
+#    directory_mode: yes
+#    remote_src: yes

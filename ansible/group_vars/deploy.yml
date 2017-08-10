@@ -1,0 +1,26 @@
+---
+    server_name: node04
+    # -- Nginx Variables --
+    # The port that Nginx listens to that is forwarded to Kibana's local port
+    nginx_kibana_port: 80
+    # The web authentication credentials to gain access to Kibana
+    kibana_user: admin
+    kibana_password: 1
+    # Nginx SSL listening port
+    elk_server_ssl_cert_port: 8080
+    # The system user that Nginx will use
+    nginx_user: www-data
+    # The IP address of the ELK server that is going to be installed
+    elk_ip: 192.168.31.117
+    # The hostname of the server that is going to run the ELK stack
+    elk_name: node04
+    filebeat_name: 192.168.31.118
+    local_repo_path: /home/user/task03/repo
+    remote_repo_path: /home/user/tmp
+    # Packages names
+    nginx_package: nginx-1.13.3-1.el7.ngx.x86_64.rpm
+    elasticsearch_package: elasticsearch-5.5.0.rpm
+    java_package: jdk-8u141-linux-x64.rpm
+    kibana_package: kibana-5.5.0-x86_64.rpm
+    logstash_package: logstash-5.5.0.rpm
+    filebeat_package: filebeat-5.5.1-x86_64.rpm
