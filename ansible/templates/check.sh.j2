@@ -11,6 +11,8 @@ elif echo $LOGSTASH_STATUS | grep -q "inactive"; then
 		echo "[!] No LOGSTASH up, better restart"
     systemctl restart logstash
     systemctl status logstash.service | grep "running"
+else
+    echo "[+] LOGSTASH is OK"
 fi
 if echo $ELASTICSEARCH_STATUS | grep -q "could not be found"; then
 		echo "[!] ELASTICSEARCH service is not installed"
@@ -18,6 +20,8 @@ elif echo $ELASTICSEARCH_STATUS | grep -q "inactive"; then
 		echo "[!] No ELASTICSEARCH up, better restart"
     systemctl restart elasticsearch
     systemctl status elasticsearch.service | grep "running"
+else
+    echo "[+] ELASTICSEARCH is OK"
 fi
 if echo $KIBANA_STATUS | grep -q "could not be found"; then
 		echo "[!] KIBANA service is not installed"
@@ -25,6 +29,8 @@ elif echo $KIBANA_STATUS | grep -q "inactive"; then
 		echo "[!] No KIBANA up, better restart"
     systemctl restart kibana
     systemctl status kibana.service | grep "running"
+else
+    echo "[+] KIBANA is OK"
 fi
 if echo $NGINX_STATUS | grep -q "could not be found"; then
 		echo "[!] NGINX service is not installed"
@@ -32,4 +38,6 @@ elif echo $NGINX_STATUS | grep -q "inactive"; then
 		echo "[!] No NGINX up, better restart"
 		systemctl restart nginx
     systemctl status nginx.service | grep "running"
+else
+    echo "[+] NGINX is OK"
 fi

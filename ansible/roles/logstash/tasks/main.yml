@@ -30,6 +30,13 @@
     insertbefore: '# Extensions for a typical CA'
     backup: yes
   when: subjectAltName_exists.stdout|int == 0
+# Update SSL to allow outside access
+- name: Updating the config file to restrict outside access
+  lineinfile:
+    destfile: /etc/ssl/openssl.cnf
+    regexp: 'subjectAltName ='
+    line: 'subjectAltName = IP: {{ elk_ip }}'
+    create: yes
 # Generate SSL certificates for Logstash
 - name: Generate SSL certificates
   shell: "[ -f /etc/pki/tls/certs/logstash-forwarder.crt ] || openssl req -config /etc/pki/tls/openssl.cnf -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/logstash-forwarder.key -out /etc/pki/tls/certs/logstash-forwarder.crt"

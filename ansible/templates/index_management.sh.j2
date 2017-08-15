@@ -1,0 +1,40 @@
+#!/bin/bash
+# Example usage: sudo ansible-playbook index_management.yml --extra-vars "action=action_name pattern=pattern_view"
+
+# Select action with indexes
+case $1 in
+  delete-old )
+    #	delete all indices, which older than N days
+    curl -XDELETE '{{ elk_ip }}:9200/_all?pretty' -H 'Content-Type: application/json' -d'
+    {
+      "query": {
+        "range" : {
+            "age" : {
+               "gte" : 30
+            }
+        }
+      }
+    }
+    '
+  ;;
+  delete-by-pattern )
+    #	delete all indices, which matches with pattern;
+    curl -XDELETE 'http://{{ elk_ip }}:9200/$2?pretty&pretty'
+  ;;
+  purge-all )
+    echo purge-all
+    #	purge all indices from elasticsearch
+    curl -XPOST 'http://{{ elk_ip }}:9200/_all/_delete_by_query?pretty' -H 'Content-Type: application/json' -d'
+    {
+      "query": {
+        "match_all": {}
+      }
+    }
+    '
+  ;;
+  get-all|* )
+    # Show all indices
+    curl -g -XGET 'http://{{ elk_ip }}:9200/_cat/indices?v&pretty'
+  ;;
+esac
+echo $INDEX_ACTION

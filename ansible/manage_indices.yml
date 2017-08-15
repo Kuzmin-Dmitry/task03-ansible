@@ -1,20 +1,34 @@
 ---
-- hosts: node04
-#  vars_files:
-#    - group_vars/vars.yml
+- hosts: "{{ elk_name }}"
+  vars_files:
+    - group_vars/deploy.yml
   remote_user: root
   become: true
   become_user: root
   become_method: sudo
   tasks:
-    - name: Create folder for scripts
-      file:
-        path: /opt/scripts
-        state: directory
+    - name: Define action variable
+      set_fact:
+        action_name: ""
+      when: action is undefined
+
+    - name: Define pattern variable
+      set_fact:
+        pattern: ""
+      when: pattern is undefined
+
     - name: Transfer the script (index_management)
-      copy:
-        src: "{{ playbook_dir }}/files/index_management.sh.js"
-        dest: /opt/scripts/index_management.sh
-        mode: 0777
+      template:
+        src=index_management.sh.j2
+        dest=/opt/scripts/index_management.sh
+        owner=root
+        group=root
+        mode=0777
+
     - name: Manage ELK indices
-      command: sh /opt/scripts/index_management.sh -v
+      shell: /opt/scripts/index_management.sh "{{ action_name }}" "{{ pattern }}"
+      register: manage_indices
+    - debug: var=manage_indices.stdout_lines
+
+    #  sh /opt/scripts/index_management.sh
+    # {{ action_name }} {{ pattern_name }}

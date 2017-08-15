@@ -1,7 +1,7 @@
 ---
-- hosts: node04
-#  vars_files:
-#    - group_vars/vars.yml
+- hosts: "{{ elk_name }}"
+  vars_files:
+    - group_vars/deploy.yml
   remote_user: root
   become: true
   become_user: root
@@ -13,10 +13,10 @@
         state: directory
     - name: Transfer the script
       copy:
-        src: "{{ playbook_dir }}/files/check.sh.j2"
+        src: "{{ playbook_dir }}/templates/check.sh.j2"
         dest: /opt/scripts/check.sh
         mode: 0777
     - name: Check status of ELK and Nginx
       command: sh /opt/scripts/check.sh -v
-#      register: elk
-#    - debug: var=elk.stdout_lines
+      register: elk
+    - debug: var=elk.stdout_lines

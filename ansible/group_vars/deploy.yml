@@ -1,6 +1,4 @@
 ---
-#    server_name: node04
-    # -- Nginx Variables --
     # The port that Nginx listens to that is forwarded to Kibana's local port
     nginx_kibana_port: 80
     # The web authentication credentials to gain access to Kibana
@@ -11,13 +9,16 @@
     # The system user that Nginx will use
     nginx_user: www-data
     # The IP address of the ELK server that is going to be installed
-    elk_ip: 192.168.31.117
+    elk_ip: 192.168.31.105
     # The hostname of the server that is going to run the ELK stack
-    elk_name: node04
+    elk_name: node05
     # The IP address of the filebeat client that is going to be installed
-    filebeat_ip: 192.168.31.113
-    filebeat_name: ansible_server
+    filebeat_ip: 192.168.31.106
+    # The hostname of the server that is going to run the ELK stack
+    filebeat_name: node06
+    # Local repo for need packages
     local_repo_path: /home/user/task03/repo
+    # Remote directory for temporary files
     remote_repo_path: /home/user/tmp
     # Packages names
     nginx_package: nginx-1.13.3-1.el7.ngx.x86_64.rpm

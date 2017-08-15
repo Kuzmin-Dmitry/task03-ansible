@@ -1,5 +1,0 @@
----
-  elk_name: node04
-  elk_ip: 192.168.31.117
-  local_repo_path: /home/user/task03/repo
-  remote_repo_path: /home/user/tmp

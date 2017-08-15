@@ -1,6 +1,6 @@
 server {
    listen {{nginx_kibana_port}};
-   server_name {{server_name}};
+   server_name {{elk_name}};
    auth_basic "Restricted Access";
    auth_basic_user_file /etc/nginx/htpasswd.users;
    location / {
